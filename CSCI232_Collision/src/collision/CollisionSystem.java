@@ -14,15 +14,17 @@ import edu.princeton.cs.algs4.MinPQ;
  * @author bryanplant
  */
 public class CollisionSystem {
-	private static double drawFreq = 2;
-	private MinPQ<Event> pq;
-	private Particle[] particles;
-	private double t = 0;
+	private static double drawFreq = 2;  //affects how often particles are drawn to screen
+	private MinPQ<Event> pq; //priority queue for holding events
+	private Particle[] particles; //the array of particles
+	private double t = 0; //how much time has elapsed
 
+	//constructor for the collisionsystem
 	public CollisionSystem(Particle[] particles){
 		this.particles = particles;
 	}
 
+	//updates the time it will take for particle a to hit all other particles and walls
 	private void updateEvents(Particle a){
 		if(a == null) return;
 
@@ -36,6 +38,7 @@ public class CollisionSystem {
 		pq.insert(new Event(t + a.collidesY(), null, a));
 	}
 
+	//draws the particles to the screen
 	private void draw(){
 		StdDraw.clear();
 		for(int i = 0; i < particles.length; i++){
@@ -44,20 +47,20 @@ public class CollisionSystem {
 		StdDraw.show();
 		StdDraw.pause(20);
 		pq.insert(new Event(t + 1.0/drawFreq, null, null));
-
-		System.out.println(t);
 	}
 
+	//the main loop of the program
 	private void simulate(){
 		pq = new MinPQ<Event>();
 		for(int i = 0; i < particles.length; i++){
 			updateEvents(particles[i]);
 		}
-		pq.insert(new Event(0, null, null));
+		pq.insert(new Event(0, null, null)); //first call to draw
 
 		while(true){
 			Event e = pq.delMin();
 
+			//updates the particles' motion and events if the event was not supervening
 			if(!e.wasSuperveningEvent()){
 				Particle a = e.getParticle1();
 				Particle b = e.getParticle2();
@@ -66,13 +69,13 @@ public class CollisionSystem {
 				}
 				t = e.getTime();
 
-				if(a != null && b != null)
+				if(a != null && b != null) //particle-particle collision
 					a.bounce(b);
-				else if(a != null && b == null)
+				else if(a != null && b == null) //particle-vertical wall collision
 					a.bounceX();
-				else if(a == null && b != null)
+				else if(a == null && b != null) //particle-horizontal wall collision
 					b.bounceY();
-				else if(a == null && b == null)
+				else if(a == null && b == null) //draw event
 					draw();
 
 				updateEvents(a);
@@ -94,6 +97,7 @@ public class CollisionSystem {
 
 		Particle[] particles;
 
+		//scans particle info from text file
 	    int size = sc.nextInt();
         particles = new Particle[size];
         for (int i = 0; i < size; i++) {

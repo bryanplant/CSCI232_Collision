@@ -5,10 +5,11 @@ import java.awt.Color;
 import edu.princeton.cs.algs4.StdDraw;
 
 public class Particle {
-	double rx, ry, vx, vy, m, r;
-	Color color;
-	int collisionCount;
+	double rx, ry, vx, vy, m, r; //x-coordinate, y-coordinate, x-velocity, y-velocity, mass, radius
+	Color color; //color of the particle
+	int collisionCount; //number of collisions this particle has been in
 
+	//constructor for particle class
 	public Particle(double rx, double ry, double vx, double vy, double r, double m, Color color){
 		this.rx = rx;
 		this.ry = ry;
@@ -22,16 +23,19 @@ public class Particle {
 		collisionCount = 0;
 	}
 
+	//updates the position of the particle based on how much time has passed since the last update
 	public void update(double dt){
 		rx+=vx*dt;
 		ry+=vy*dt;
 	}
 
+	//draws the particle to the screen
 	public void draw(){
 		StdDraw.setPenColor(color);
 		StdDraw.filledCircle(rx, ry, r);
 	}
 
+	//returns when the particle will collide with a vertical wall
 	public double collidesX(){
 		if(vx > 0){
 			return (1-r-rx)/vx;
@@ -43,6 +47,7 @@ public class Particle {
 			return 10000000;
 	}
 
+	//returns when the particle will collide with a horizontal wall
 	public double collidesY(){
 		if(vy > 0){
 			return (1-r-ry)/vy;
@@ -54,6 +59,7 @@ public class Particle {
 			return Double.POSITIVE_INFINITY;
 	}
 
+	//returns when the particle will collide with particle b
 	public double collides(Particle b){
 		if(this == b)
 			return Double.POSITIVE_INFINITY;
@@ -79,16 +85,19 @@ public class Particle {
 		return -(dRdV + Math.sqrt(d))/dVdV;
 	}
 
+	//reverses x-velocity
 	public void bounceX(){
 		vx *= -1;
 		collisionCount++;
 	}
 
+	//reverses y-velocity
 	public void bounceY(){
 		vy *= -1;
 		collisionCount++;
 	}
 
+	//alters velocity of this particle and particle b when they bounce off eachother
 	public void bounce(Particle b){
 		double dx = b.getRx() - rx;
 		double dy = b.getRy() - ry;

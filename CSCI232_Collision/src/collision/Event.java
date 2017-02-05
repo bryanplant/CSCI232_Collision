@@ -4,12 +4,14 @@ import collision.Event;
 import collision.Particle;
 
 public class Event implements Comparable<Event>{
-	private double t;
-	private Particle a;
-	private Particle b;
-	private int aCollisions;
-	private int bCollisions;
+	private double t; //when the event will occur
+	private Particle a; //particle 1
+	private Particle b; //particle 2
+	private int aCollisions; //how many collisions particle 1 has had
+	private int bCollisions; //how many collisions particle 2 has had
 
+	//constructor for event
+	//requires two particles and when the event will occur
 	public Event(double t, Particle a, Particle b){
 		this.t = t;
 		this.a = a;
@@ -25,6 +27,7 @@ public class Event implements Comparable<Event>{
 			bCollisions = -1;
 	}
 
+	//implementation of compareTo for Comparable interface
 	@Override
 	public int compareTo(Event x) {
 		if(t > x.t)
@@ -35,6 +38,10 @@ public class Event implements Comparable<Event>{
 			return 0;
 	}
 
+	/*
+		determines if the event is valid based on how many collisions
+		the particles have been in
+	*/
 	public boolean wasSuperveningEvent(){
 		if(a!=null && a.getCollisionCount() != aCollisions)
 			return true;
